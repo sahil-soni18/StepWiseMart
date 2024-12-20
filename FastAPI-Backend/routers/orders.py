@@ -8,7 +8,7 @@ router = APIRouter()
 orders = []
 
 # Place a new order
-@router.post("/")
+@router.post("/order")
 async def place_order(user_id: int, items: list[dict], total_price: float):
     """
     items: List of dictionaries with keys: product_id, quantity
@@ -28,14 +28,14 @@ async def place_order(user_id: int, items: list[dict], total_price: float):
     return {"message": "Order placed successfully", "order": new_order}
 
 # View all orders
-@router.get("/")
+@router.get("/order")
 async def get_all_orders():
     if not orders:
         return {"message": "No orders available"}
     return {"orders": orders}
 
 # View an order by ID
-@router.get("/{order_id}")
+@router.get("/order/{order_id}")
 async def get_order_by_id(order_id: int):
     order = next((order for order in orders if order["order_id"] == order_id), None)
     if not order:
@@ -43,7 +43,7 @@ async def get_order_by_id(order_id: int):
     return {"order": order}
 
 # Update the status of an order
-@router.put("/{order_id}/status")
+@router.put("/order/{order_id}/status")
 async def update_order_status(order_id: int, status: str):
     order = next((order for order in orders if order["order_id"] == order_id), None)
     if not order:
@@ -53,7 +53,7 @@ async def update_order_status(order_id: int, status: str):
     return {"message": "Order status updated successfully", "order": order}
 
 # Cancel an order
-@router.delete("/{order_id}")
+@router.delete("/order/{order_id}")
 async def cancel_order(order_id: int):
     global orders
     order = next((order for order in orders if order["order_id"] == order_id), None)

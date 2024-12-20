@@ -10,12 +10,12 @@ products = [
 ]
 
 # Get all products
-@router.get("/")
+@router.get("/product")
 async def get_all_products():
     return {"products": products}
 
 # Get a product by ID
-@router.get("/{product_id}")
+@router.get("/product/{product_id}")
 async def get_product_by_id(product_id: int):
     product = next((product for product in products if product["id"] == product_id), None)
     if product:
@@ -23,7 +23,7 @@ async def get_product_by_id(product_id: int):
     return {"error": "Product not found"}
 
 # Add a new product
-@router.post("/")
+@router.post("/product")
 async def create_product(name: str, price: float, stock: int):
     new_product = {
         "id": len(products) + 1,
@@ -35,7 +35,7 @@ async def create_product(name: str, price: float, stock: int):
     return {"message": "Product added successfully", "product": new_product}
 
 # Update a product
-@router.put("/{product_id}")
+@router.put("/product/{product_id}")
 async def update_product(product_id: int, name: str = None, price: float = None, stock: int = None):
     product = next((product for product in products if product["id"] == product_id), None)
     if not product:
@@ -49,7 +49,7 @@ async def update_product(product_id: int, name: str = None, price: float = None,
     return {"message": "Product updated successfully", "product": product}
 
 # Delete a product
-@router.delete("/{product_id}")
+@router.delete("/product/{product_id}")
 async def delete_product(product_id: int):
     global products
     products = [product for product in products if product["id"] != product_id]

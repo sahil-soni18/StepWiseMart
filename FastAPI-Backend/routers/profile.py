@@ -7,7 +7,7 @@ router = APIRouter()
 profiles = {}
 
 # Create a new profile
-@router.post("/")
+@router.post("/profile")
 async def create_profile(user_id: int, name: str, email: str, age: int = None):
     """
     Create a new user profile.
@@ -24,7 +24,7 @@ async def create_profile(user_id: int, name: str, email: str, age: int = None):
     return {"message": "Profile created successfully", "profile": profiles[user_id]}
 
 # Get a profile by user ID
-@router.get("/{user_id}")
+@router.get("/profile/{user_id}")
 async def get_profile(user_id: int):
     """
     Retrieve a user profile by user ID.
@@ -35,7 +35,7 @@ async def get_profile(user_id: int):
     return {"profile": profile}
 
 # Update an existing profile
-@router.put("/{user_id}")
+@router.put("/profile/{user_id}")
 async def update_profile(user_id: int, name: str = None, email: str = None, age: int = None):
     """
     Update a user's profile.
@@ -54,7 +54,7 @@ async def update_profile(user_id: int, name: str = None, email: str = None, age:
     return {"message": "Profile updated successfully", "profile": profile}
 
 # Delete a profile
-@router.delete("/{user_id}")
+@router.delete("/profile/{user_id}")
 async def delete_profile(user_id: int):
     """
     Delete a user profile by user ID.

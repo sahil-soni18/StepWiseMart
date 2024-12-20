@@ -7,7 +7,7 @@ router = APIRouter()
 cart = []
 
 # Add an item to the cart
-@router.post("/")
+@router.post("/cart")
 async def add_to_cart(product_id: int, quantity: int):
     if quantity <= 0:
         raise HTTPException(status_code=400, detail="Quantity must be greater than zero.")
@@ -22,14 +22,14 @@ async def add_to_cart(product_id: int, quantity: int):
     return {"message": "Item added to cart", "cart": cart}
 
 # View the cart
-@router.get("/")
+@router.get("/cart")
 async def view_cart():
     if not cart:
         return {"message": "Cart is empty"}
     return {"cart": cart}
 
 # Update an item in the cart
-@router.put("/{product_id}")
+@router.put("/cart/{product_id}")
 async def update_cart_item(product_id: int, quantity: int):
     if quantity <= 0:
         raise HTTPException(status_code=400, detail="Quantity must be greater than zero.")
@@ -42,14 +42,14 @@ async def update_cart_item(product_id: int, quantity: int):
     return {"message": "Cart item updated", "cart": cart}
 
 # Remove an item from the cart
-@router.delete("/{product_id}")
+@router.delete("/cart/{product_id}")
 async def remove_from_cart(product_id: int):
     global cart
     cart = [item for item in cart if item["product_id"] != product_id]
     return {"message": f"Item with product_id {product_id} removed from cart", "cart": cart}
 
 # Clear the entire cart
-@router.delete("/")
+@router.delete("/cart")
 async def clear_cart():
     global cart
     cart = []
