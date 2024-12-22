@@ -11,6 +11,7 @@ class Product(Base):
     description = Column(Text, nullable=True)
     price = Column(Float, nullable=False)
     stock = Column(Integer, default=0)
+    category = Column(String, nullable=False)
     # category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
  
     image_urls = Column(JSON, nullable=True) 
