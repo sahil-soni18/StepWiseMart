@@ -1,67 +1,71 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
 from datetime import datetime
+from models.order import Order
+from schemas.order_schema import OrderCreate, OrderOut
+from db.database import get_db
 
-# Create a router instance
 router = APIRouter()
 
-# Sample order data (for demonstration; replace with database integration)
-orders = []
+# Create a new order
+@router.post("/orders", response_model=OrderOut)
+def create_order(order_data: OrderCreate, db: Session = Depends(get_db)):
+    # Create a new order
+    new_order = Order(
+        user_id=order_data.user_id,
+        total_amount=order_data.total_amount,
+        status=order_data.status,
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
 
-# Place a new order
-@router.post("/order")
-async def place_order(user_id: int, items: list[dict], total_price: float):
-    """
-    items: List of dictionaries with keys: product_id, quantity
-    """
-    if not items:
-        raise HTTPException(status_code=400, detail="Order must contain at least one item.")
+    db.add(new_order)
+    db.commit()
+    db.refresh(new_order)
 
-    new_order = {
-        "order_id": len(orders) + 1,
-        "user_id": user_id,
-        "items": items,
-        "total_price": total_price,
-        "status": "Pending",
-        "order_date": datetime.now(),
-    }
-    orders.append(new_order)
-    return {"message": "Order placed successfully", "order": new_order}
+    return new_order
 
-# View all orders
-@router.get("/order")
-async def get_all_orders():
-    if not orders:
-        return {"message": "No orders available"}
-    return {"orders": orders}
+# Get an order by ID
+@router.get("/orders/{order_id}", response_model=OrderOut)
+def get_order(order_id: int, db: Session = Depends(get_db)):
+    db_order = db.query(Order).filter(Order.id == order_id).first()
+    if not db_order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return db_order
 
-# View an order by ID
-@router.get("/order/{order_id}")
-async def get_order_by_id(order_id: int):
-    order = next((order for order in orders if order["order_id"] == order_id), None)
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found.")
-    return {"order": order}
+# Get all orders for a user
+@router.get("/orders/user/{user_id}", response_model=List[OrderOut])
+def get_user_orders(user_id: int, db: Session = Depends(get_db)):
+    db_orders = db.query(Order).filter(Order.user_id == user_id).all()
+    if not db_orders:
+        raise HTTPException(status_code=404, detail="No orders found for this user")
+    return db_orders
 
-# Update the status of an order
-@router.put("/order/{order_id}/status")
-async def update_order_status(order_id: int, status: str):
-    order = next((order for order in orders if order["order_id"] == order_id), None)
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found.")
+# Update an order
+@router.put("/orders/{order_id}", response_model=OrderOut)
+def update_order(order_id: int, order_data: OrderCreate, db: Session = Depends(get_db)):
+    db_order = db.query(Order).filter(Order.id == order_id).first()
+    if not db_order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    # Update order details
+    db_order.total_amount = order_data.total_amount
+    db_order.status = order_data.status
+    db_order.updated_at = datetime.utcnow()
+
+    db.commit()
+    db.refresh(db_order)
+
+    return db_order
+
+# Delete an order
+@router.delete("/orders/{order_id}", response_model=OrderOut)
+def delete_order(order_id: int, db: Session = Depends(get_db)):
+    db_order = db.query(Order).filter(Order.id == order_id).first()
+    if not db_order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    db.delete(db_order)
+    db.commit()
     
-    order["status"] = status
-    return {"message": "Order status updated successfully", "order": order}
-
-# Cancel an order
-@router.delete("/order/{order_id}")
-async def cancel_order(order_id: int):
-    global orders
-    order = next((order for order in orders if order["order_id"] == order_id), None)
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found.")
-    
-    if order["status"] in ["Shipped", "Delivered"]:
-        raise HTTPException(status_code=400, detail="Cannot cancel an order that has already been shipped or delivered.")
-    
-    orders = [o for o in orders if o["order_id"] != order_id]
-    return {"message": f"Order {order_id} canceled successfully"}
+    return db_order
