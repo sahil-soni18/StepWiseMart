@@ -16,7 +16,6 @@ class UserCreate(UserBase):
 class UserOut(UserBase):
     id: int
     cart: Optional[List['CartOut']] = []  # Optional relationship to cart
-
     created_at: datetime
     updated_at: datetime
 
