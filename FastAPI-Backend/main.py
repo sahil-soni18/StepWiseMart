@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from routers import profile, orders, product, cart
-
+from Auth.AuthAPI import authRouter
 
 app = FastAPI()
 
@@ -13,3 +13,4 @@ app.include_router(profile.router, prefix="/profile", tags=["Profile"])
 app.include_router(orders.router, prefix="/orders", tags=["Orders"])
 app.include_router(product.router, prefix="/product", tags=["Product"])
 app.include_router(cart.router, prefix="/cart", tags=["Cart"])
+app.include_router(authRouter, prefix="/auth", tags=["Auth"])
