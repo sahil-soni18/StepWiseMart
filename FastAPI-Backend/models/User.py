@@ -14,6 +14,7 @@ class User(Base):
     contact = Column(String, nullable=False)
     is_admin = Column(Boolean, default=False)
     cart = relationship("Cart", back_populates="user")
+    orders = relationship("Order", back_populates="user")  # User has many orders
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
