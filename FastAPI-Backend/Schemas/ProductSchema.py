@@ -13,6 +13,17 @@ class ProductBase(BaseModel):
 class ProductCreate(ProductBase):
     pass  # Used for creating a new product
 
+class ProductUpdate(BaseModel):
+    name: Optional[str]
+    description: Optional[str]
+    price: Optional[float]
+    stock: Optional[int]
+    image_urls: Optional[List[str]]
+    colors: Optional[List[str]]
+
+    class Config:
+        from_attributes = True
+
 class ProductOut(ProductBase):
     id: int
     created_at: datetime

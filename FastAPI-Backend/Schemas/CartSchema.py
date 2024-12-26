@@ -10,6 +10,16 @@ class CartBase(BaseModel):
 class CartCreate(CartBase):
     user_id: int  # Used for creating a cart
 
+
+class CartUpdate(BaseModel):
+    user_id: Optional[int]
+    items: Optional[dict] = {}
+    total_price: Optional[int]
+
+
+    class Config:
+        from_attributes = True
+
 class CartOut(CartBase):
     id: int
     # user_id: int

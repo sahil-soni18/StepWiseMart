@@ -10,6 +10,12 @@ class OrderBase(BaseModel):
 class OrderCreate(OrderBase):
     user_id: int  
 
+
+class OrderUpdate(OrderBase):
+    total_price: Optional[float]
+    status: Optional[str] = "pending"
+    payment_status: Optional[str] = "unpaid"
+
 class OrderOut(OrderBase):
     id: int
     user_id: int

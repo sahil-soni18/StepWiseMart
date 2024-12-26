@@ -14,6 +14,14 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str  # Password field for creating a user
 
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    address: Optional[str] = None
+    contact: Optional[str] = None
+    is_admin: Optional[bool] = None
+    password: Optional[str] = None  # Password field for updating a user
+
 class UserOut(UserBase):
     id: int
     cart: Optional[List['CartOut']] = []  # Optional relationship to cart

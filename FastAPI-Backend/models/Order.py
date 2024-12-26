@@ -17,6 +17,8 @@ class Order(Base):
 
     # Relationships
     user = relationship("User", back_populates="orders")  # User who placed the order
+    payment = relationship("Payment", back_populates="order", uselist=False)
+
     # cart = relationship("Cart", back_populates="order")  # Cart associated with the order
     # Add Product relationship if you store products directly in the order
     # products = relationship("Product", secondary="order_products")

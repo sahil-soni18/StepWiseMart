@@ -18,7 +18,9 @@ async def login( response: Response, userCredentails: UserCred, db: Session = De
 
     if user:
         if verify_password(userCredentails.password, user.password_hash):
-            access_token = create_access_token(data={"sub": userCredentails.email})
+            token_data = {"email": user.email, "is_admin": user.is_admin}
+            # access_token = create_access_token(data={"sub": userCredentails.email})
+            access_token = create_access_token(data=token_data)
             access_token = access_token.decode("utf8")
 
             response.set_cookie(
@@ -63,7 +65,9 @@ async def signup(response: Response, userData: UserCreate, db: Session = Depends
             db.commit()
             db.refresh(newUser)
 
-            access_token = create_access_token(data={"sub": newUser.email})
+            token_data = {"email": newUser.email, "is_admin": newUser.is_admin}
+            # access_token = create_access_token(data={"sub": userCredentails.email})
+            access_token = create_access_token(data=token_data)
             access_token = access_token.decode("utf8")
 
             response.set_cookie(
