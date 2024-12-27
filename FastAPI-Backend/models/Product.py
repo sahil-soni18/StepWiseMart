@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, Float, Boolean, ForeignKey, DateTime, JSON
 # from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, timezone
 from ..db.database import Base
 
 class Product(Base):
@@ -16,8 +16,8 @@ class Product(Base):
  
     image_urls = Column(JSON, nullable=True) 
     colors = Column(JSON, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc), nullable=False)
 
     # category = relationship('Category', back_populates='products')
 

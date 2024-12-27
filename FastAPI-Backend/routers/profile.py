@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from datetime import datetime
@@ -80,3 +81,6 @@ def delete_user_profile(user_id: int, db: Session = Depends(get_db)):
     db.delete(db_user)
     db.commit()
     return db_user
+=======
+#TODO: Create Profile Section for Order etc.
+>>>>>>> 0557f59ce79936cbb6dbfc57dff924bf5b1ec48b
