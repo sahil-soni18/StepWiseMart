@@ -2,7 +2,7 @@ from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from datetime import datetime
 from .CartSchema import CartOut
-from OrderSchema import OrderOut
+from .OrderSchema import OrderOut
 
 class UserBase(BaseModel):
     name: str
@@ -30,5 +30,5 @@ class UserOut(UserBase):
     updated_at: datetime
 
     class Config:
-        orm_mode = True  # Pydantic will treat the SQLAlchemy models as dictionaries.
+        from_attributes = True  # Pydantic will treat the SQLAlchemy models as dictionaries.
 

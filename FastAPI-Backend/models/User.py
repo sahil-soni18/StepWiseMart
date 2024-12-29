@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
-from ..db.database import Base
+from db.database import Base
 from datetime import datetime
 from sqlalchemy.orm import relationship
 
@@ -15,6 +15,7 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     cart = relationship("Cart", back_populates="user")
     orders = relationship("Order", back_populates="user")  # User has many orders
+    payments = relationship("Payment", back_populates="user")  # User has many payments
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
