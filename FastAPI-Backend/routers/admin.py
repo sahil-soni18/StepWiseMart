@@ -27,6 +27,7 @@ def create_product(product_data: ProductCreate, token: dict = Depends(JWTBearer(
             description=product_data.description,
             price=product_data.price,
             stock=product_data.stock,
+            category=product_data.category,
             image_urls=product_data.image_urls,
             colors=product_data.colors,
             created_at=datetime.now(timezone.utc),
@@ -50,6 +51,7 @@ def update_product(
     db: Session = Depends(get_db),
 ):
     is_admin = token.get('is_admin')
+    print(f"is admin: {is_admin}")
     if not is_admin:
         raise HTTPException(status_code=403, detail="Access denied")
     

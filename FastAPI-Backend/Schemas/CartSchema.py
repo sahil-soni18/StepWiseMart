@@ -1,29 +1,37 @@
+# Schemas/CartSchema.py
+
 from pydantic import BaseModel
-from typing import  Optional
+from typing import List, Optional
 from datetime import datetime
+
+class CartItem(BaseModel):
+    product_id: int
+    quantity: int
+
+    class Config:
+        from_attributes = True
 
 class CartBase(BaseModel):
     user_id: int
-    items: Optional[dict] = {} # List of dictionaries representing cart items
-    total_price: int = 0
+    total_price: float
+    items: Optional[List[CartItem]] = []  # List of CartItem objects
+
+    class Config:
+        from_attributes = True
 
 class CartCreate(CartBase):
-    user_id: int  # Used for creating a cart
-
+    pass  # Used for creating a cart
 
 class CartUpdate(BaseModel):
-    user_id: Optional[int]
-    items: Optional[dict] = {}
-    total_price: Optional[int]
-
+    user_id: Optional[int] = None
+    items: Optional[List[CartItem]] = None  # List of CartItem objects
+    total_price: Optional[float] = None
 
     class Config:
         from_attributes = True
 
 class CartOut(CartBase):
     id: int
-    # user_id: int
-    # items: Optional[List[dict]] = []  # Same as above, to hold cart items as a list of dicts.
     created_at: datetime
     updated_at: datetime
 

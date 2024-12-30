@@ -5,9 +5,11 @@ import jwt
 from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 
+
+
 SECRET_KEY = "FastAPI-ECommerce-Backend"  # Replace with a strong secret key
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30  # Expiry time for access tokens
+ACCESS_TOKEN_EXPIRE_MINUTES = 60  # Expiry time for access tokens
 
 # Initialize the password context
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

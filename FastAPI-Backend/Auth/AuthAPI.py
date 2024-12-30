@@ -17,8 +17,8 @@ async def login( response: Response, userCredentails: UserCred, db: Session = De
     user = db.query(User).filter(User.email == userCredentails.email).first()
 
     if user:
-        if verify_password(userCredentails.password, user.password_hash):
-            token_data = {"email": user.email, "is_admin": user.is_admin}
+        if verify_password(userCredentails.password, user.password):
+            token_data = {"id": user.id, "email": user.email, "is_admin": user.is_admin}
             # access_token = create_access_token(data={"sub": userCredentails.email})
             access_token = create_access_token(data=token_data)
             access_token_str = access_token.decode("utf-8") if isinstance(access_token, (bytes, bytearray)) else access_token.tobytes().decode("utf-8") if isinstance(access_token, memoryview) else access_token
@@ -54,7 +54,7 @@ async def signup(response: Response, userData: UserCreate, db: Session = Depends
             newUser = User(
                 name=userData.name,
                 email=userData.email,
-                password_hash=hashed_password,
+                password=hashed_password,
                 address=userData.address,
                 contact=userData.contact,
                 is_admin=userData.is_admin,
@@ -66,7 +66,7 @@ async def signup(response: Response, userData: UserCreate, db: Session = Depends
             db.commit()
             db.refresh(newUser)
 
-            token_data = {"email": newUser.email, "is_admin": newUser.is_admin}
+            token_data = {"id": newUser.id, "email": newUser.email, "is_admin": newUser.is_admin}
             access_token = create_access_token(data=token_data)
 
             # Convert access_token to string if it's in bytes
@@ -87,11 +87,6 @@ async def signup(response: Response, userData: UserCreate, db: Session = Depends
         
     else:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already exists")
-
-
-
-
-
 
 
 # Logout endpoint

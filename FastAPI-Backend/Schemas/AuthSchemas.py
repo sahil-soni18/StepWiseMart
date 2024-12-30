@@ -11,4 +11,4 @@ class Token(BaseModel):
     token_type: str
 
 class UserInDB(UserCred):
-    hashed_password: str
+    password: str
